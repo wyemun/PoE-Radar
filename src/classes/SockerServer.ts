@@ -45,6 +45,10 @@ export default class SocketServer implements Server {
     })
   }
 
+  public getPort(): string {
+    return this.port
+  }
+
   async serve (): Promise<void> {
     console.log('Starting socket server...')
     this.httpServer.listen(this.port)

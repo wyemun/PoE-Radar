@@ -40,18 +40,19 @@ export default class Application {
 
   async start(): Promise<void> {
     console.log('PoE Radar version: %s', version)
+    const port = this.server.getPort()
 
     const ips = this.getLocalIP().map(i => i.address)
 
     if (ips.length > 0) {
       console.log(`
 Open the following page in your mobile browser:
-http://${ips[0]}
+http://${ips[0]}:${port}
     `)
 
       if (ips.length > 1) {
         const [, ...theRest] = ips
-        const theRestStr = theRest.map(ip => `http://${ip}`)
+        const theRestStr = theRest.map(ip => `http://${ip}:${port}`)
         console.log(`If the address above does not work, try any of the following instead:
 ${theRestStr.join('\n')}
 `)
