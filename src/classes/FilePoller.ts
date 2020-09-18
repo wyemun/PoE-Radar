@@ -68,7 +68,6 @@ export default class FilePoller {
   }
 
   private matchZone (locationName: string): Zone | undefined {
-    console.log('Finding', locationName)
     return zoneData.find(({name}) => name === locationName)
   }
 
@@ -82,26 +81,23 @@ export default class FilePoller {
   
         if (matches) {
           const [, time, location] = matches
-          console.log(time, '-->', location, '\n')
-          // const found = data[location] || ['?']
+          // console.log(time, '-->', location, '\n')
 
           const zoneMatched = this.matchZone(location)
 
           if (zoneMatched) {
-            console.log('Note:', zoneMatched.note)
+            this.dispatcher.emit(EventType.LocationChanged, zoneMatched)
           }
         }
       } catch (e) {
-        console.log('Failed to read last line', e)
+        // console.log('Failed to read last line', e)
       }
     })
   }
 
   async start (): Promise<void> {
-    console.log('Start polling this file: ', this.clientPath)
+    // console.log('Start polling this file: ', this.clientPath)
     this.startWatchingFile()
-    // ! Testing only
-    await sleep(5000)
     this.dispatcher.emit(EventType.Start, {})
   }
 } 

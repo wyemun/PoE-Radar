@@ -1,20 +1,25 @@
-import Server from './server.interface'
+import Server from './Server.interface'
 import io from 'socket.io'
 import http from 'http'
 import { EventEmitter } from 'events'
-import { EventType } from './file-poller'
+import Express from './Express'
+import { EventType } from './FilePoller'
 
 export default class SocketServer implements Server {
   private port: string
   private httpServer: http.Server
   private ioServer: SocketIO.Server
+  private expressApp: Express
   private dispatcher: EventEmitter = new EventEmitter()
 
   constructor (port: string) {
     this.port = port
 
-    this.httpServer = http.createServer()
+    this.expressApp = new Express()
+
+    this.httpServer = http.createServer(this.expressApp.getApp())
     this.ioServer = io(this.httpServer)
+    
 
     this.addIOListeners()
     this.addDispatcherListeners()
@@ -32,7 +37,11 @@ export default class SocketServer implements Server {
 
   private addDispatcherListeners (): void {
     this.dispatcher.on(EventType.Start, msg => {
-      console.log('Message from FilePoller', msg)
+      // console.log('Message from FilePoller', msg)
+    })
+
+    this.dispatcher.on(EventType.LocationChanged, msg => {
+      this.ioServer.emit('zone', msg)
     })
   }
 

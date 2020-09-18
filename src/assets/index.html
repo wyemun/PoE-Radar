@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+  <title> PoE Radar by wyemun </title>
+</head>
+<style>
+  html, body {
+    background-color: black;
+  }
+  body {
+    margin-top: 1rem;
+    padding: 0 1rem;
+  }
+</style>
+<script src="/socket.io/socket.io.js"></script>
+
+<body>
+  <div class="container">
+    <div class="notification is-dark">
+      <h4 class="title is-4" id="location" ><i>Waiting for next location change</i></h4>
+    </div>
+    <div id="note" class="notification is-warning is-size-4-touch is-dark">
+      🙈
+    </div>
+    <div class="tags" id="tags"></div>
+  </div>
+
+  <script>
+    function createTag (message, color = 'is-light') {
+      return `<span class="tag is-large is-light ${color}">${message}</span>&nbsp;`
+    } 
+    
+    function parseTags (zone) {
+      const results = []
+
+      if (zone.haspassive) {
+        results.push(createTag('📕 passive', 'is-info'))
+      }
+
+      if (zone.hasRecipe) {
+        results.push(createTag('📜 recipe', 'is-warning'))
+      }
+
+      if (zone.questRewardsSkills) {
+        results.push(createTag('💎 skill gem', 'is-primary'))
+      }
+
+      if (zone.hastrial) {
+        results.push(createTag('🔑 trial', 'is-success'))
+      }
+
+      return results.join('')
+    }
+
+    (function () {
+      var socket = io();
+      socket.on('zone', (msg) => {
+        document.getElementById('location').innerHTML = msg.name
+        document.getElementById('note').innerHTML = msg.note
+        document.getElementById('tags').innerHTML = parseTags(msg)
+      })
+    })()
+  </script>
+</body>
+
+</html>

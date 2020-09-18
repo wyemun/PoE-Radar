@@ -1,5 +1,5 @@
-import Application from './classes/application'
-import SocketServer from './classes/socket-server'
+import Application from './classes/Application'
+import SocketServer from './classes/SockerServer'
 
 
 (async () => {
