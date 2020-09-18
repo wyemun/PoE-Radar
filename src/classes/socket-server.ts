@@ -3,7 +3,6 @@ import io from 'socket.io'
 import http from 'http'
 import { EventEmitter } from 'events'
 import { EventType } from './file-poller'
-import { promisify } from 'util'
 
 export default class SocketServer implements Server {
   private port: string
