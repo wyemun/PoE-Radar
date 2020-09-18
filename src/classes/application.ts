@@ -6,7 +6,7 @@ import System from './System'
 import { existsSync } from 'fs'
 
 // const { CLIENT_PATH = 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\Path of Exile\\logs\\Client.txt' } = process.env
-const { CLIENT_PATH } = process.env
+const { CLIENT_PATH = 'C:\\Program Files (x86)\\Grinding Gear Games\\Path of Exile\\logs\\Client.txt' } = process.env
 
 export default class Application {
   private server: Server
