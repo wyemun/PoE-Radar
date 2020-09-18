@@ -26,6 +26,7 @@ export default class Application {
     try {
       const poeDir = System.findInstallLocation()
       const poeClientPath = `${poeDir}\\logs\\Client.txt`
+      // console.log('>>>', poeClientPath)
       this.poller = new FilePoller(this.server.getDispatcher(), poeClientPath)
     } catch {
       // do nothing

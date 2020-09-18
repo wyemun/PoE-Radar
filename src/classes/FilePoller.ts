@@ -72,7 +72,7 @@ export default class FilePoller {
   }
 
   private startWatchingFile () {
-    const locationChangeRegex = /(?:\d{4}\/\d{2}\/\d{2}) (\d{2}:\d{2}:\d{2}) (?:\d+) (?:[0-9a-zA-Z]{3}) (?:\[INFO Client \d{4}\]) : You have entered ([a-zA-Z0-9 ']+)./
+    const locationChangeRegex = /(?:\d{4}\/\d{2}\/\d{2}) (\d{2}:\d{2}:\d{2}) (?:\d+) (?:[0-9a-zA-Z]{3}) (?:\[INFO Client \d{3,6}\]) : You have entered ([a-zA-Z0-9 ']+)./
 
     fs.watchFile(this.clientPath, async () => {
       try {
