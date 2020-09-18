@@ -1,6 +1,6 @@
 {
   "name": "poe-leveling-mobile",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "",
   "main": "index.js",
   "bin": "dist/index.js",
