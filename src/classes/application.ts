@@ -2,8 +2,11 @@ import { NetworkInterfaceInfo, networkInterfaces } from 'os'
 import Server from './Server.interface'
 import { version } from '../../package.json'
 import FilePoller from './FilePoller'
+import System from './System'
+import { existsSync } from 'fs'
 
-const { CLIENT_PATH = 'C:/Program Files (x86)/Steam/steamapps/common/Path of Exile/logs/Client.txt' } = process.env
+// const { CLIENT_PATH = 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\Path of Exile\\logs\\Client.txt' } = process.env
+const { CLIENT_PATH } = process.env
 
 export default class Application {
   private server: Server
@@ -11,7 +14,24 @@ export default class Application {
 
   constructor(server: Server) {
     this.server = server
-    this.poller = new FilePoller(this.server.getDispatcher(), CLIENT_PATH)
+
+    if (CLIENT_PATH) {
+      if (existsSync(CLIENT_PATH)) {
+        this.poller = new FilePoller(this.server.getDispatcher(), CLIENT_PATH)
+        return
+      }
+      console.log("Provided client path is invalid, proceeding to auto detection...")
+    }
+
+    try {
+      const poeDir = System.findInstallLocation()
+      const poeClientPath = `${poeDir}\\logs\\Client.txt`
+      this.poller = new FilePoller(this.server.getDispatcher(), poeClientPath)
+    } catch {
+      // do nothing
+      console.log("Unable to detect PoE installation location, using exiting now...")
+      process.exit(1)
+    }
   }
 
   private async startPoller() {
@@ -31,9 +51,9 @@ export default class Application {
 
       if (inner)
         return [...prev, ...inner]
-      
+
       return prev
-    },  [] as NetworkInterfaceInfo[])
+    }, [] as NetworkInterfaceInfo[])
 
     return ips
   }
